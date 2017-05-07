@@ -39,7 +39,7 @@ int main()
     //output << "Array length" << "," << "Avg execution time (ms)" << std::endl; //Disable when testing basic ops
 
     INIT_TIMER
-    for (int n = 400; n<=10000; n+=25){     //Where n is the size of the test array
+    for (int n = 400; n<=1000; n+=25){     //Where n is the size of the test array
         for (int i = 0; i<100; i++){        //Determines how many arrays of each n itteration is tested
             int A[n];
             for (int j = 0; j<n; j++){      //Populating test array with RNG
@@ -48,8 +48,8 @@ int main()
             //FOR TESTING//cout << "minimum distance = " << MinDistance(A, n) << endl;
             //START_TIMER //Disable when testing basic ops
 
-            MinDistance(A, n);
-            MinDistance2(A, n);
+            MinDistance(A, n); //Disable when testing algorithm 2
+            //MinDistance2(A, n); //Disable when testing algorithm 1
 
             //STOP_TIMER  //Disable when testing basic ops - adds milliseconds since 'START_TIMER' to 'etime' counter.
             //FOR TESTING//cout << "basic operations performed = " << basic/(i+1) << endl;
