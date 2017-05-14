@@ -85,9 +85,12 @@ int MinDistance(int* A, int n){
     int dmin = INT_MAX;   //doesn't have to actually be infinity. Just large enough that it can be overiden by the actual minimum
     for (int i = 0; i <= n-1; i++) {
         for (int j = 0; j <= n-1; j++) {
-            basic++;  // Increments the basic operation count for this algorithm. Disable when testing execution time
-            if ((i != j) && (abs(A[i] - A[j]) < dmin)){
-                dmin = abs(A[i] - A[j]);
+            if (i != j){
+                basic++;  // Increments the basic operation count for this algorithm. Disable when testing execution time
+                if (abs(A[i] - A[j]) < dmin){
+                    dmin = abs(A[i] - A[j]);
+                    basic++;  // Increments the basic operation count for this algorithm. Disable when testing execution time
+                }
             }
         }
     }
