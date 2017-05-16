@@ -47,8 +47,8 @@ int main()
     std::uniform_int_distribution<> dis(1, 2147483647);
 
 //header for .csv file - Report Reference [3]:
-    outputOps << "Array length" << "," << "Avg MinDistance() basic ops" << "," << "Avg MinDistance2() basic ops" << std::endl; //Disable when testing executiong time
-    outputTime << "Array length" << "," << "Avg MinDistance() execution time (ms)" << "," << "Avg MinDistance2() execution time (ms)" << std::endl; //Disable when testing basic ops
+    outputOps << "Array length" << "," << "MinDistance()" << "," << "MinDistance2()" << std::endl; //Disable when testing executiong time
+    outputTime << "Array length" << "," << "Avg MinDistance() etime (ms)" << "," << "Avg MinDistance2() etime (ms)" << std::endl; //Disable when testing basic ops
 
     INIT_TIMER
     for (int n = MIN_ARRAY_SIZE; n <= MAX_ARRAY_SIZE; n += ARRAY_SIZE_STEP){     //Where n is the size of the test array
