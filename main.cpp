@@ -7,10 +7,11 @@
 
 using namespace std;
 
-ofstream output("Output.csv");
+ofstream outputOps("OutputOps.csv");
+ofstream outputTime("OutputTime.csv");
 
 //Following all taken from Report Reference [4], Except for 'STOP_TIMER' which is modified to suit our tests
-//#define TIMING    //disable this line when measuring basic operations
+#define TIMING    //disable this line when measuring basic operations
 
 #ifdef TIMING
 #define INIT_TIMER auto start = std::chrono::high_resolution_clock::now();
@@ -24,8 +25,15 @@ ofstream output("Output.csv");
 #define STOP_TIMER2
 #endif
 
+#define MINARRAYSIZE 100
+#define MAXARRAYSIZE 10000
+#define ARRAYSIZESTEP 100
+#define NUMARRAYTRIALS 10
+
 int MinDistance(int* A, int n);
 int MinDistance2(int* A, int n);
+int MinDistance_OpsCount(int* A, int n);
+int MinDistance2_OpsCount(int* A, int n);
 
 long long int basic = 0;  //basic op counter for MinDistance()
 long long int basic2 = 0;  //basic op counter for MinDistance2()
@@ -39,49 +47,82 @@ int main()
     std::uniform_int_distribution<> dis(1, 2147483647);
 
 //header for .csv file - Report Reference [3]:
-    output << "Array length" << "," << "Avg MinDistance() basic ops" << "," << "Avg MinDistance2() basic ops" << std::endl; //Disable when testing executiong time
-    //output << "Array length" << "," << "Avg MinDistance() execution time (ms)" << "," << "Avg MinDistance2() execution time (ms)" << std::endl; //Disable when testing basic ops
+    outputOps << "Array length" << "," << "Avg MinDistance() basic ops" << "," << "Avg MinDistance2() basic ops" << std::endl; //Disable when testing executiong time
+    outputTime << "Array length" << "," << "Avg MinDistance() execution time (ms)" << "," << "Avg MinDistance2() execution time (ms)" << std::endl; //Disable when testing basic ops
 
     INIT_TIMER
-    for (int n = 100; n<=1000; n+=20){     //Where n is the size of the test array
-        for (int i = 0; i<10; i++){        //Determines how many arrays of each n itteration is tested
+    for (int n = MINARRAYSIZE; n <= MAXARRAYSIZE; n += ARRAYSIZESTEP){     //Where n is the size of the test array
+        cout << "Testing arrays of size " << n << endl;
+        for (int i = 0; i < NUMARRAYTRIALS; i++){        //Determines how many arrays of each n itteration is tested
             int A[n];
-            for (int j = 0; j<n; j++){      //Populating test array with RNG
+            for (int j = 0; j < n; j++){      //Populating test array with RNG
                 A[j] = dis(gen);
             }
+            /* TESTING BASIC OPERATIONS */
+            // Run First algorithm
+            MinDistance_OpsCount(A, n);
 
-            //START_TIMER //Disable when testing basic ops
-            cout << "minimum distance = " << MinDistance(A, n) << endl;
-            //MinDistance(A, n); //Disable when testing output above^
-            //STOP_TIMER  //Disable when testing basic ops - adds milliseconds since 'START_TIMER' to 'etime' counter.
-        //TESTING//cout << "etime1 = " << etime/(i+1) << endl;
+            // Run Second algorithm
+            MinDistance2_OpsCount(A, n);
 
-            //START_TIMER //Disable when testing basic ops
-            cout << "minimum distance2 = " << MinDistance2(A, n) << endl;
-            //MinDistance2(A, n); //Disable when testing output above^
-            //STOP_TIMER2  //Disable when testing basic ops - adds milliseconds since 'START_TIMER' to 'etime' counter.
-        //TESTING//cout << "etime2 = " << etime2/(i+1) << endl;
 
-            cout << "basic operations performed = " << basic/(i+1) << endl;
-            cout << "basic operations performed2 = " << basic2/(i+1) << endl;
+            /* TESTING EXECUTION TIME */
+            // Time execution of First Algorithm
+            START_TIMER
+            MinDistance(A, n);
+            STOP_TIMER // Adds milliseconds since 'START_TIMER' to 'etime' counter.
+
+            // Time execution of Second Algorithm
+            START_TIMER
+            MinDistance2(A, n);
+            STOP_TIMER2  //Adds milliseconds since 'START_TIMER' to 'etime' counter.
         }
 
-    //Disable Following for testing execution time:
-        output << n << "," << basic/10 << "," << basic2/10 << std::endl; //output for each row of .csv file - Report Reference [3]
+
+        // Output Basic Operation Counting results
+        outputOps << n << "," << basic/NUMARRAYTRIALS << "," << basic2/NUMARRAYTRIALS << std::endl; //output for each row of .csv file - Report Reference [3]
+        // Reset counters to 0
         basic = 0;
         basic2 = 0;
 
-    //Disable Following for testing basic ops:Report
-        //output << n << "," << etime/100 << "," << etime2/100 << std::endl; //output for each row of .csv file -  Reference [3]
-        //etime = 0;
-        //etime2 = 0;
+        // Output Execution Time results
+        outputTime << n << "," << etime/NUMARRAYTRIALS << "," << etime2/NUMARRAYTRIALS << std::endl; //output for each row of .csv file -  Reference [3]
+        // Reset timers to 0
+        etime = 0;
+        etime2 = 0;
     }
 
-    output.close();
+    outputOps.close();
+    outputTime.close();
     return 0;
 }
 
 int MinDistance(int* A, int n){
+    int dmin = INT_MAX;   //doesn't have to actually be infinity. Just large enough that it can be overiden by the actual minimum
+    for (int i = 0; i <= n-1; i++) {
+        for (int j = 0; j <= n-1; j++) {
+            if ((i != j) && (abs(A[i] - A[j]) < dmin)){
+                dmin = abs(A[i] - A[j]);
+                }
+        }
+    }
+    return dmin;
+}
+
+int MinDistance2(int* A, int n){
+    int dmin = INT_MAX;   //doesn't have to actually be infinity. Just large enough that it can be overiden by the actual minimum
+    for (int i = 0; i <= n-2; i++) {
+        for (int j = i+1; j <= n-1; j++) {
+            int temp = abs(A[i] - A[j]);
+            if (temp < dmin){
+                dmin = temp;
+            }
+        }
+    }
+    return dmin;
+}
+
+int MinDistance_OpsCount(int* A, int n){
     int dmin = INT_MAX;   //doesn't have to actually be infinity. Just large enough that it can be overiden by the actual minimum
     for (int i = 0; i <= n-1; i++) {
         for (int j = 0; j <= n-1; j++) {
@@ -97,7 +138,7 @@ int MinDistance(int* A, int n){
     return dmin;
 }
 
-int MinDistance2(int* A, int n){
+int MinDistance2_OpsCount(int* A, int n){
     int dmin = INT_MAX;   //doesn't have to actually be infinity. Just large enough that it can be overiden by the actual minimum
     for (int i = 0; i <= n-2; i++) {
         for (int j = i+1; j <= n-1; j++) {
