@@ -28,7 +28,7 @@ ofstream outputTime("OutputTime.csv");
 #define MIN_ARRAY_SIZE 100
 #define MAX_ARRAY_SIZE 10000
 #define ARRAY_SIZE_STEP 25
-#define NUM_ARRAY_TRIALS 20
+#define NUM_ARRAY_TRIALS 50
 
 int MinDistance(int* A, int n);
 int MinDistance2(int* A, int n);
@@ -58,12 +58,16 @@ int main()
             for (int j = 0; j < n; j++){      //Populating test array with RNG
                 A[j] = dis(gen);
             }
-            /* TESTING BASIC OPERATIONS */
-            // Run First algorithm
-            MinDistance_OpsCount(A, n);
 
-            // Run Second algorithm
-            MinDistance2_OpsCount(A, n);
+            /* TESTING BASIC OPERATIONS */
+            //We don't need to average multiple trials for counting the basic operation since the variation in results is negligible
+            if (i == 0){
+                // Run First algorithm
+                MinDistance_OpsCount(A, n);
+
+                // Run Second algorithm
+                MinDistance2_OpsCount(A, n);
+            }
 
 
             /* TESTING EXECUTION TIME */
@@ -76,11 +80,12 @@ int main()
             START_TIMER
             MinDistance2(A, n);
             STOP_TIMER2  //Adds milliseconds since 'START_TIMER' to 'etime2' counter.
+
         }
 
 
         // Output Basic Operation Counting results
-        outputOps << n << "," << basic/NUM_ARRAY_TRIALS << "," << basic2/NUM_ARRAY_TRIALS << std::endl; //output for each row of .csv file - Report Reference [3]
+        outputOps << n << "," << basic << "," << basic2 << std::endl; //output for each row of .csv file - Report Reference [3]
         // Reset counters to 0
         basic = 0;
         basic2 = 0;
