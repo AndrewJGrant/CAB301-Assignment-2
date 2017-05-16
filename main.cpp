@@ -11,7 +11,7 @@ ofstream outputOps("OutputOps.csv");
 ofstream outputTime("OutputTime.csv");
 
 //Following all taken from Report Reference [4], Except for 'STOP_TIMER' which is modified to suit our tests
-#define TIMING    //disable this line when measuring basic operations
+#define TIMING
 
 #ifdef TIMING
 #define INIT_TIMER auto start = std::chrono::high_resolution_clock::now();
@@ -25,10 +25,10 @@ ofstream outputTime("OutputTime.csv");
 #define STOP_TIMER2
 #endif
 
-#define MINARRAYSIZE 100
-#define MAXARRAYSIZE 10000
-#define ARRAYSIZESTEP 100
-#define NUMARRAYTRIALS 10
+#define MIN_ARRAY_SIZE 100
+#define MAX_ARRAY_SIZE 10000
+#define ARRAY_SIZE_STEP 25
+#define NUM_ARRAY_TRIALS 20
 
 int MinDistance(int* A, int n);
 int MinDistance2(int* A, int n);
@@ -51,9 +51,9 @@ int main()
     outputTime << "Array length" << "," << "Avg MinDistance() execution time (ms)" << "," << "Avg MinDistance2() execution time (ms)" << std::endl; //Disable when testing basic ops
 
     INIT_TIMER
-    for (int n = MINARRAYSIZE; n <= MAXARRAYSIZE; n += ARRAYSIZESTEP){     //Where n is the size of the test array
+    for (int n = MIN_ARRAY_SIZE; n <= MAX_ARRAY_SIZE; n += ARRAY_SIZE_STEP){     //Where n is the size of the test array
         cout << "Testing arrays of size " << n << endl;
-        for (int i = 0; i < NUMARRAYTRIALS; i++){        //Determines how many arrays of each n itteration is tested
+        for (int i = 0; i < NUM_ARRAY_TRIALS; i++){        //Determines how many arrays of each n itteration is tested
             int A[n];
             for (int j = 0; j < n; j++){      //Populating test array with RNG
                 A[j] = dis(gen);
@@ -75,19 +75,19 @@ int main()
             // Time execution of Second Algorithm
             START_TIMER
             MinDistance2(A, n);
-            STOP_TIMER2  //Adds milliseconds since 'START_TIMER' to 'etime' counter.
+            STOP_TIMER2  //Adds milliseconds since 'START_TIMER' to 'etime2' counter.
         }
 
 
         // Output Basic Operation Counting results
-        outputOps << n << "," << basic/NUMARRAYTRIALS << "," << basic2/NUMARRAYTRIALS << std::endl; //output for each row of .csv file - Report Reference [3]
+        outputOps << n << "," << basic/NUM_ARRAY_TRIALS << "," << basic2/NUM_ARRAY_TRIALS << std::endl; //output for each row of .csv file - Report Reference [3]
         // Reset counters to 0
         basic = 0;
         basic2 = 0;
 
         // Output Execution Time results
-        outputTime << n << "," << etime/NUMARRAYTRIALS << "," << etime2/NUMARRAYTRIALS << std::endl; //output for each row of .csv file -  Reference [3]
-        // Reset timers to 0
+        outputTime << n << "," << etime/NUM_ARRAY_TRIALS << "," << etime2/NUM_ARRAY_TRIALS << std::endl; //output for each row of .csv file -  Reference [3]
+        // Reset counters to 0
         etime = 0;
         etime2 = 0;
     }
@@ -127,10 +127,10 @@ int MinDistance_OpsCount(int* A, int n){
     for (int i = 0; i <= n-1; i++) {
         for (int j = 0; j <= n-1; j++) {
             if (i != j){
-                basic++;  // Increments the basic operation count for this algorithm. Disable when testing execution time
+                basic++;  // Increments the basic operation count for this algorithm.
                 if (abs(A[i] - A[j]) < dmin){
                     dmin = abs(A[i] - A[j]);
-                    basic++;  // Increments the basic operation count for this algorithm. Disable when testing execution time
+                    basic++;  // Increments the basic operation count for this algorithm.
                 }
             }
         }
@@ -143,7 +143,7 @@ int MinDistance2_OpsCount(int* A, int n){
     for (int i = 0; i <= n-2; i++) {
         for (int j = i+1; j <= n-1; j++) {
             int temp = abs(A[i] - A[j]);
-            basic2++;  // Increments the basic operation count for this algorithm. Disable when testing execution time
+            basic2++;  // Increments the basic operation count for this algorithm.
             if (temp < dmin){
                 dmin = temp;
             }
