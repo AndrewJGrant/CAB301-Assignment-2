@@ -30,6 +30,7 @@ ofstream outputTime("OutputTime.csv");
 #define ARRAY_SIZE_STEP 25
 #define NUM_ARRAY_TRIALS 50
 
+bool FunctionalTesting();
 int MinDistance(int* A, int n);
 int MinDistance2(int* A, int n);
 int MinDistance_OpsCount(int* A, int n);
@@ -42,6 +43,11 @@ long long int etime2 = 0;  //execution time counter for MinDistance2()
 
 int main()
 {
+    // Verify the algoritms work correctly, and exit the program if not
+    if (!FunctionalTesting()) {
+            cout << "Tests Failed, exiting program..." << endl;
+            return 1;
+    } else cout << "Tests Passed, begin data collection..." << endl;
 //The following lines are for RNG - Report Reference [2]:
     std::mt19937 gen(GetTickCount());
     std::uniform_int_distribution<> dis(1, 2147483647);
@@ -100,6 +106,53 @@ int main()
     outputOps.close();
     outputTime.close();
     return 0;
+}
+
+bool FunctionalTesting() {
+    cout << "Running Functional Tests..." << endl;
+
+    // Test General Case
+    int testArrayA[8] = {1, 5, 9, 52, 46, 10, 13, 22};
+    int expectedA = 1;
+    int resultA_1 = MinDistance(testArrayA, 8);
+    int resultA_2 = MinDistance2(testArrayA, 8);
+    cout << "Test 1 Expected Result: " << expectedA << "\tResult of Algorithm 1: " << resultA_1 << "\tResult of Algorithm 2: " << resultA_2 << endl;
+    bool resultA = ((expectedA == resultA_1)&&(expectedA == resultA_2));
+
+    // Test when dmin is between the first and last numbers
+    int testArrayB[7] = {100, 3, 92, 66, 12, 22, 97};
+    int expectedB = 3;
+    int resultB_1 = MinDistance(testArrayB, 7);
+    int resultB_2 = MinDistance2(testArrayB, 7);
+    cout << "Test 2 Expected Result: " << expectedB << "\tResult of Algorithm 1: " << resultB_1 << "\tResult of Algorithm 2: " << resultB_2 << endl;
+    bool resultB = ((expectedB == resultB_1)&&(expectedB == resultB_2));
+
+    // Test when dmin is between the two last numbers
+    int testArrayC[9] = {50, 7, 30, 21, 56, 78, 15, 40, 44};
+    int expectedC = 4;
+    int resultC_1 = MinDistance(testArrayC, 9);
+    int resultC_2 = MinDistance2(testArrayC, 9);
+    cout << "Test 3 Expected Result: " << expectedC << "\tResult of Algorithm 1: " << resultC_1 << "\tResult of Algorithm 2: " << resultC_2 << endl;
+    bool resultC = ((expectedC == resultC_1)&&(expectedC == resultC_2));
+
+    // Test extreme case when two elements are the same (dmin = 0)
+    int testArrayD[5] = {20, 12, 40, 12, 43};
+    int expectedD = 0;
+    int resultD_1 = MinDistance(testArrayD, 5);
+    int resultD_2 = MinDistance2(testArrayD, 5);
+    cout << "Test 4 Expected Result: " << expectedD << "\tResult of Algorithm 1: " << resultD_1 << "\tResult of Algorithm 2: " << resultD_2 << endl;
+    bool resultD = ((expectedD == resultD_1)&&(expectedD == resultD_2));
+
+    // Verify that the algorithm still works on negative numbers
+    int testArrayE[6] = {39, -47, -5, -7, 6, -39};
+    int expectedE = 2;
+    int resultE_1 = MinDistance(testArrayE, 6);
+    int resultE_2 = MinDistance2(testArrayE, 6);
+    cout << "Test 5 Expected Result: " << expectedE << "\tResult of Algorithm 1: " << resultE_1 << "\tResult of Algorithm 2: " << resultE_2 << endl;
+    bool resultE = ((expectedE == resultE_1)&&(expectedE == resultE_2));
+
+    //Return true if all tests passed, false otherwise
+    return resultA && resultB && resultC && resultD && resultE;
 }
 
 int MinDistance(int* A, int n){
