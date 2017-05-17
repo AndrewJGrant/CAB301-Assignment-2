@@ -103,7 +103,8 @@ int main()
 }
 
 int MinDistance(int* A, int n){
-    int dmin = INT_MAX;   //doesn't have to actually be infinity. Just large enough that it can be overiden by the actual minimum
+    int dmin = INT_MAX;   /* the initial value of dmin doesn't have to actually be
+    infinity. Just large enough that it can be overiden by the actual minimum */
     for (int i = 0; i <= n-1; i++) {
         for (int j = 0; j <= n-1; j++) {
             if ((i != j) && (abs(A[i] - A[j]) < dmin)){
@@ -115,7 +116,8 @@ int MinDistance(int* A, int n){
 }
 
 int MinDistance2(int* A, int n){
-    int dmin = INT_MAX;   //doesn't have to actually be infinity. Just large enough that it can be overiden by the actual minimum
+    int dmin = INT_MAX;   /* the initial value of dmin doesn't have to actually be
+    infinity. Just large enough that it can be overiden by the actual minimum */
     for (int i = 0; i <= n-2; i++) {
         for (int j = i+1; j <= n-1; j++) {
             int temp = abs(A[i] - A[j]);
