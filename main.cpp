@@ -25,10 +25,13 @@ ofstream outputTime("OutputTime.csv");
 #define STOP_TIMER2
 #endif
 
-#define MIN_ARRAY_SIZE 100
+#define MIN_ARRAY_SIZE 25
 #define MAX_ARRAY_SIZE 10000
 #define ARRAY_SIZE_STEP 25
 #define NUM_ARRAY_TRIALS 50
+
+#define RANDOM_MIN -500000000
+#define RANDOM_MAX 500000000
 
 bool FunctionalTesting();
 int MinDistance(int* A, int n);
@@ -48,13 +51,14 @@ int main()
             cout << "Tests Failed, exiting program..." << endl;
             return 1;
     } else cout << "Tests Passed, begin data collection..." << endl;
-//The following lines are for RNG - Report Reference [2]:
-    std::mt19937 gen(GetTickCount());
-    std::uniform_int_distribution<> dis(1, 2147483647);
 
-//header for .csv file - Report Reference [3]:
-    outputOps << "Array length" << "," << "MinDistance()" << "," << "MinDistance2()" << std::endl; //Disable when testing executiong time
-    outputTime << "Array length" << "," << "Avg MinDistance() etime (ms)" << "," << "Avg MinDistance2() etime (ms)" << std::endl; //Disable when testing basic ops
+    //The following lines are for RNG - Report Reference [2]:
+    std::mt19937 gen(GetTickCount());
+    std::uniform_int_distribution<> dis(RANDOM_MIN, RANDOM_MAX);
+
+    //header for .csv file - Report Reference [3]:
+    outputOps << "Array length" << "," << "MinDistance()" << "," << "MinDistance2()" << std::endl;
+    outputTime << "Array length" << "," << "Avg MinDistance() etime (ms)" << "," << "Avg MinDistance2() etime (ms)" << std::endl;
 
     INIT_TIMER
     for (int n = MIN_ARRAY_SIZE; n <= MAX_ARRAY_SIZE; n += ARRAY_SIZE_STEP){     //Where n is the size of the test array
@@ -75,7 +79,6 @@ int main()
                 MinDistance2_OpsCount(A, n);
             }
 
-
             /* TESTING EXECUTION TIME */
             // Time execution of First Algorithm
             START_TIMER
@@ -86,18 +89,16 @@ int main()
             START_TIMER
             MinDistance2(A, n);
             STOP_TIMER2  //Adds milliseconds since 'START_TIMER' to 'etime2' counter.
-
         }
 
-
-        // Output Basic Operation Counting results
-        outputOps << n << "," << basic << "," << basic2 << std::endl; //output for each row of .csv file - Report Reference [3]
+        // Output Basic Operation Counting results to Operatons CSV file
+        outputOps << n << "," << basic << "," << basic2 << std::endl;
         // Reset counters to 0
         basic = 0;
         basic2 = 0;
 
-        // Output Execution Time results
-        outputTime << n << "," << etime/NUM_ARRAY_TRIALS << "," << etime2/NUM_ARRAY_TRIALS << std::endl; //output for each row of .csv file -  Reference [3]
+        // Output Execution Time results to Time CSV file
+        outputTime << n << "," << etime/NUM_ARRAY_TRIALS << "," << etime2/NUM_ARRAY_TRIALS << std::endl;
         // Reset counters to 0
         etime = 0;
         etime2 = 0;
@@ -183,7 +184,8 @@ int MinDistance2(int* A, int n){
 }
 
 int MinDistance_OpsCount(int* A, int n){
-    int dmin = INT_MAX;   //doesn't have to actually be infinity. Just large enough that it can be overiden by the actual minimum
+    int dmin = INT_MAX;   /* the initial value of dmin doesn't have to actually be
+    infinity. Just large enough that it can be overiden by the actual minimum */
     for (int i = 0; i <= n-1; i++) {
         for (int j = 0; j <= n-1; j++) {
             if (i != j){
@@ -199,7 +201,8 @@ int MinDistance_OpsCount(int* A, int n){
 }
 
 int MinDistance2_OpsCount(int* A, int n){
-    int dmin = INT_MAX;   //doesn't have to actually be infinity. Just large enough that it can be overiden by the actual minimum
+    int dmin = INT_MAX;   /* the initial value of dmin doesn't have to actually be
+    infinity. Just large enough that it can be overiden by the actual minimum */
     for (int i = 0; i <= n-2; i++) {
         for (int j = i+1; j <= n-1; j++) {
             int temp = abs(A[i] - A[j]);
