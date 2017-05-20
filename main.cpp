@@ -10,7 +10,7 @@ using namespace std;
 ofstream outputOps("OutputOps.csv");
 ofstream outputTime("OutputTime.csv");
 
-//Following all taken from Report Reference [4], Except for 'STOP_TIMER' which is modified to suit our tests
+//Following all taken from Report Reference [5], Except for 'STOP_TIMER' which is modified to suit our tests
 #define TIMING
 
 #ifdef TIMING
