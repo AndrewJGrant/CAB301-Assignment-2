@@ -1,0 +1,8 @@
+Andrew Grant - N9167340 - 50%:
+ * Initial code implementation of algorithms and main()
+ * Section 2 of the Report
+
+Shane Havers - N9477756 - 50%:
+ * Optimisation of code and implementation of functional testing
+ * Running of experiments and plotting the results with custom MATLAB script
+ * Section 1, 3 & 4 of the Report
